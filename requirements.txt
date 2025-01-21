@@ -1,0 +1,6 @@
+streamlit==1.31.0
+plotly==5.18.0
+torch==2.1.0
+gymnasium==0.29.1
+numpy==1.24.3
+Box2D==2.3.10
