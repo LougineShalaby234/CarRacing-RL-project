@@ -56,7 +56,7 @@ def update_train_agent():
             'action_distribution': [0] * 5
         }
         
-        num_episodes = 1000
+        num_episodes = 3
         for episode in range(num_episodes):
             state, _ = env.reset()
             episode_reward = 0
@@ -109,12 +109,12 @@ def update_train_agent():
             )
 
             # Save metrics every 10 episodes
-            if episode % 10 == 0:
+            if episode % 1 == 0:
                 save_metrics(training_metrics)
                 print(f"Episode {episode + 1}, Reward: {episode_reward:.2f}, Epsilon: {agent.epsilon:.2f}")
 
             # Save model checkpoint every 100 episodes
-            if (episode + 1) % 100 == 0:
+            if (episode + 1) % 1 == 0:
                 checkpoint_path = metrics_dir / f'model_checkpoint_{episode+1}.pth'
                 torch.save({
                     'model_state_dict': agent.policy_net.state_dict(),
