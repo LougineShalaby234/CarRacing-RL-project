@@ -1,4 +1,4 @@
-# (C) 2024 Stanford CS224N Group Custom Project by Artyom Shaposhnikov, Shubhra Mishra, Roberto Garcia
+# (C) 2025 NGU NLP Project by Youmna ELhoseny and Lougine Shalaby
 
 #prevent the local variables from being imported into the remote environment as they can cuase crashes
 from multiprocessing import Process, Queue
@@ -175,12 +175,6 @@ class ModelManager:
             else:
                 test = self.method + str(self.learning_iteration)
             logger.info(f"{test} all prompts mean accuracy: {mean_accuracy:.4f}, Majority accuracy: {majority_accuracy:.4f}, Oracle accuracy: {oracle:.4f}, problems solved: {len(self.problems)}")
-#        for rephrasing in range(0, 5):
-#            mean_accuracy = compute_mean_accuracy(self.problems, self.prompts, rephrasing)
-#            majority_accuracy = compute_majority_answer_accuracy(self.problems, self.prompts, rephrasing)
-#            oracle = compute_oracle_accuracy(self.problems, self.prompts, rephrasing)
-#            logger.info(f"Rephrasing{rephrasing} mean accuracy: {mean_accuracy:.2f}, Majority accuracy: {majority_accuracy:.2f}, Oracle accuracy: {oracle:.2f}, problems solved: {len(self.problems)}")
-
             prompt_accuracies = test
             for i, prompt in enumerate(self.prompts):
                 prompt_accuracies += f" prompt{i}: {prompt.compute_accuracy():.4f},"
@@ -579,14 +573,12 @@ class ModelManager:
 
 
     def archive_solutions(self, filename="train_samples.txt"):
-#        return
         if os.path.exists(filename):
             os.rename(filename, filename + '-' + self.iteration)
 
     def train(self):
         train_samples = self.load_all_solutions()
         eval_samples = train_samples[len(train_samples)-self.batch_size*2:]
-#        train_samples = train_samples[:len(train_samples)-self.batch_size*2]
         self.iteration = time.strftime("%Y%m%d-%H%M%S")
         model_id = self.MathLLM.model_id
         self.MathLLM.unload_model()
@@ -698,39 +690,8 @@ def load_solutions(filename="all_samples1.txt"):
 
 
 if __name__ == '__main__':
-#    p, hp = load_solutions()
     mp.set_start_method('spawn')
     logger.add("learning.log", rotation = "100 MB")
     logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)s: %(message)s', datefmt = '%Y-%m-%d %H:%M:%S')
-
-#    M = MathLLM("trained_iter_20240401-101540-lora", "mistral", use_vllm=False, load=False, dataset_class=TokenizedQADataset)  # revision = BASE_PHI_REVISION
-#    M.merge_lora()
-#    model_manager = ModelManager("microsoft/phi-2", start_from=0, num_samples = 7473) #("trained_iter_20240220-235255", num_samples=1024)
-#    model_manager = ModelManager("trained_iter_20240214-181649", start_from=0, num_samples = 7473) #("trained_iter_20240220-235255", num_samples=1024)
-#    model_manager = ModelManager("trained_iter_20240215-134533", start_from=0, num_samples = 7473) #("trained_iter_20240220-235255", num_samples=1024)
-#    model_manager = ModelManager("trained_iter_20240309-070712", start_from=0, num_samples = 7473) #("trained_iter_20240220-235255", num_samples=1024)
-#    model_manager = ModelManager("trained_iter_20240318-090716", start_from=0, num_samples=7473, method = 'test')  # ("trained_iter_20240220-235255", num_samples=1024)
-#    model_manager = ModelManager("trained_iter_20240328-194728", "mistral", start_from=0, num_samples=7473, method='temperature')  # ("trained_iter_20240220-235255", num_samples=1024)
-#    model_manager = ModelManager("trained_iter_20240401-101540", "mistral", start_from=0, num_samples=7473, method='temperature')
-
-#    model_manager = ModelManager("trained_iter_20240404-015311", 'mistral', start_from=5700, num_samples=7473, method='rephrase')
-    # model_manager = ModelManager("trained_iter_20240420-084455", 'mistral', start_from=0, num_samples=7473, method='rephrase')
-    model_manager = ModelManager("mistralai/Mistral-7B-Instruct-v0.1", "mistral", start_from=0, num_samples=7473, method='temperature') # ("trained_iter_20240220-235255", num_samples=1024)
-#    model_manager = ModelManager("mistralai/Mistral-7B-Instruct-v0.1", "mistral", start_from=0, num_samples=7473, method='temperature')  # ("trained_iter_20240220-235255", num_samples=1024)
-#    samples1 = model_manager.load_all_solutions(all=True)
-#    samples2 = model_manager.load_and_filter_all_solutions(all=True)
-#    NF = 0
-#    for sample in samples1:
-#        if sample not in samples2:
-#            NF += 1
-#    logger.info(f"Found {NF} samples in samples1 that are not in samples2")
-#    for sample in samples2:
-#        if sample not in samples1:
-#            NF += 1
-#    logger.info(f"Found {NF} samples in samples2 that are not in samples1")
-    #    model_manager = ModelManager("trained_iter_20240322-192937", start_from=0, num_samples=1024,
-#                             method='cross')  # ("trained_iter_20240220-235255", num_samples=1024)
-#    model_manager = ModelManager("trained_iter_20240323-072154", start_from=0, num_samples=7473, method='cross')
-#model_manager.load_all_solutions()
-    #run the process_queue method in the background
+    model_manager = ModelManager("mistralai/Mistral-7B-Instruct-v0.1", "mistral", start_from=0, num_samples=7473, method='temperature') 
     asyncio.run(model_manager.run())
